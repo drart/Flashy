@@ -27,6 +27,8 @@ board.on("ready", function() {
 
 var osc = require("osc");
 var WebSocket = require("ws");
+var socketPort;
+var on = true;
 
 var wss = new WebSocket.Server({
         port: 8081
@@ -34,7 +36,7 @@ var wss = new WebSocket.Server({
 
 wss.on("connection", function (socket) {
     console.log("A Web Socket connection has been established!");
-    var socketPort = new osc.WebSocketPort({
+    socketPort = new osc.WebSocketPort({
         socket: socket
     });
     socketPort.send({
@@ -44,4 +46,24 @@ wss.on("connection", function (socket) {
             value: 100.38101
         }]
     });
+
+	setInterval(function(){
+	    if (on){
+			otherled.brightness(0);
+		}else{
+			otherled.brightness(220);
+		}
+
+		on = !on;
+	    socketPort.send({
+		address: "/carrier/lsls",
+		args: [{
+		    type: "f",
+		    value: 100.38101
+		}]
+	    });
+	}, 500);
+
+
 });
+

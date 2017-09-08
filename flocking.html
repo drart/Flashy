@@ -4,6 +4,7 @@
         <title>osc.js Web Sockets</title>
         <meta charset="UTF-8" />
         <script src="node_modules/osc/dist/osc-browser.min.js"></script>
+        <script src="node_modules/flocking/dist/flocking-all.min.js"></script>
     </head>
     <body>
 
@@ -17,6 +18,16 @@
             });
             console.log(oscPort);
             oscPort.open();
+
+	    var synth = flock.synth({
+		synthDef:{
+			ugen : "flock.ugen.impulse",
+			freq: 0
+		}
+	});
+	synth.play();
+
+
         </script>
     </body>
 </html>
