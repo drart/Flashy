@@ -14,16 +14,26 @@
                 metadata: true
             });
             oscPort.on("message", function (oscMsg) {
-                console.log("An OSC message just arrived!", oscMsg);
+                //console.log("An OSC message just arrived!", oscMsg);
+		console.log(oscMsg.args[0].value);
+		synth.set("synthy.mul.gate", 1 - oscMsg.args[0].value);
             });
             console.log(oscPort);
             oscPort.open();
 
 	    var synth = flock.synth({
-		synthDef:{
-			ugen : "flock.ugen.impulse",
-			freq: 0
+		synthDef: {
+		id: "synthy",
+		ugen: "flock.ugen.sinOsc",
+		freq: 440,
+		mul: {
+		    ugen: "flock.ugen.asr",
+		    start: 0.0,
+		    attack: 0.01,
+		    sustain: 0.25,
+		    release: 1.0,
 		}
+	    }
 	});
 	synth.play();
 
