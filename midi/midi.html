@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>osc.js Web Sockets</title>
+        <meta charset="UTF-8" />
+        <script src="../node_modules/osc/dist/osc-browser.min.js"></script>
+        <script src="../node_modules/flocking/dist/flocking-all.min.js"></script>
+    </head>
+    <body>
+
+        <script>
+            var oscPort = new osc.WebSocketPort({
+                url: "ws://localhost:8081", // URL to your Web Socket server.
+                metadata: true
+            });
+            oscPort.on("message", function (oscMsg) {
+                //console.log("An OSC message just arrived!", oscMsg);
+		console.log(oscMsg.args[0].value);
+		synth.set("synthy.mul.gate", 1 - oscMsg.args[0].value);
+            });
+            //console.log(oscPort);
+            oscPort.open();
+/*
+	    var synth = flock.synth({
+		synthDef: {
+		id: "synthy",
+		ugen: "flock.ugen.sinOsc",
+		freq: 440,
+		mul: {
+		    ugen: "flock.ugen.asr",
+		    start: 0.0,
+		    attack: 0.01,
+		    sustain: 0.25,
+		    release: 1.0,
+		}
+	    }
+	});
+	synth.play();
+*/
+
+
+var midiConnection = flock.midi.connection({
+    // This should only be used if you know the port you want to use
+    // ahead of time. Otherwise, the system.ports object should be bound to a UI
+    // of some kind and the user should be allowed to select their ports.
+    // When a selection has been made, invoke .open() on this connection.
+    // Remember that the whole system is asynchronous, which means you have to wait
+    // for the ready() event to get the current list of ports.
+    openImmediately: true,
+    
+    // This option is highly configurable. In the simplest case,
+    // you can specify a "manufacturer" properity, a port "name" property (e.g. QUNEO), or both.
+    // If you want more complex routings, you can specify "inputs" and "outputs" objects,
+    // which can contain "manufacturer" and "name" properties. This allows
+    // you to route input signals from a different device than the output.
+    // You can even specify arrays for the "input" and "output" properties 
+    // if you want to listen for MIDI message on multiple ports or send broadcast
+    // messages to multiple device.
+    // But for most simple cases, you'll just want to refer to the device either 
+    // by port name or manufacturer.
+    ports: {
+        manufacturer: "behringer"
+    },
+
+    listeners: {
+        noteOn: function (msg) {
+		console.log(msg);
+        },
+        
+        noteOff: function () {
+        },
+        
+        control: function (msg) {
+		console.log(msg);
+		oscPort.send({
+			//data here
+		});
+
+        }
+    }
+});	
+
+        </script>
+    </body>
+</html>
