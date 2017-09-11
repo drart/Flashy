@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>osc.js Web Sockets</title>
+        <title>WebMIDI sending Web Sockets</title>
         <meta charset="UTF-8" />
         <script src="../node_modules/osc/dist/osc-browser.min.js"></script>
         <script src="../node_modules/flocking/dist/flocking-all.min.js"></script>
     </head>
     <body>
+	<input type="range" id="m1" value="90" min="0" max="127">
+	<input type="range" id="m2" value="90" min="0" max="127">
 
         <script>
             var oscPort = new osc.WebSocketPort({
@@ -71,15 +73,24 @@ var midiConnection = flock.midi.connection({
         },
         
         control: function (msg) {
-		console.log(msg);
-		oscPort.send({
-			//data here
-		});
+		if (msg.number === 81){
+			document.getElementById("m1").value = msg.value;
+			/*
+			oscPort.send({
+				//data here
+			});
+			*/
+		}
 
+		if (msg.number === 82){
+			document.getElementById("m2").value = msg.value;
+		}
         }
     }
 });	
 
         </script>
+
+
     </body>
 </html>
