@@ -5,6 +5,12 @@
         <meta charset="UTF-8" />
         <script src="../node_modules/osc/dist/osc-browser.min.js"></script>
         <script src="../node_modules/flocking/dist/flocking-all.min.js"></script>
+	<!-- https://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically -->
+	<style>
+		input[type="range"]{
+			-webkit-appearance: slider-vertical;
+		}
+	</style>
     </head>
     <body>
 	<input type="range" id="m1" value="90" min="0" max="127">
