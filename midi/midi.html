@@ -19,7 +19,7 @@
         <script>
             var oscPort = new osc.WebSocketPort({
                 url: "ws://localhost:8081", // URL to your Web Socket server.
-                metadata: true
+                //metadata: true
             });
             oscPort.on("message", function (oscMsg) {
                 //console.log("An OSC message just arrived!", oscMsg);
@@ -81,11 +81,10 @@ var midiConnection = flock.midi.connection({
         control: function (msg) {
 		if (msg.number === 81){
 			document.getElementById("m1").value = msg.value;
-			/*
 			oscPort.send({
-				//data here
+			    address: "m1",
+			    args: [msg.value]
 			});
-			*/
 		}
 
 		if (msg.number === 82){
